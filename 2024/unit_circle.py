@@ -1,3 +1,4 @@
+# Visualization of all 6 trig functions in a unit circle.
 from manim_imports_ext import *
 
 
