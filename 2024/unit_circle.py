@@ -1,6 +1,5 @@
 # Visualization of all 6 trig functions in a unit circle.
-from manim import *
-
+from manim_imports_ext import *
 
 class TrigRepresentationsScene(Scene):
     CONFIG = {
@@ -10,12 +9,24 @@ class TrigRepresentationsScene(Scene):
         "circle_color": RED,
         "theta_color": YELLOW,
         "theta_height": 0.3,
-        "theta_value": np.pi / 5,
+        "theta_value": np.pi / 5,  # Initial theta value
         "x_line_colors": MAROON_B,
         "y_line_colors": BLUE,
     }
 
     def setup(self):
+        # Ensure CONFIG is initialized before using its values
+        self.unit_length = self.CONFIG.get("unit_length", 1.5)
+        self.arc_radius = self.CONFIG.get("arc_radius", 0.5)
+        self.axes_color = self.CONFIG.get("axes_color", WHITE)
+        self.circle_color = self.CONFIG.get("circle_color", RED)
+        self.theta_color = self.CONFIG.get("theta_color", YELLOW)
+        self.theta_height = self.CONFIG.get("theta_height", 0.3)
+        self.theta_value = self.CONFIG.get("theta_value", np.pi / 5)
+        self.x_line_colors = self.CONFIG.get("x_line_colors", MAROON_B)
+        self.y_line_colors = self.CONFIG.get("y_line_colors", BLUE)
+
+
         self.init_axes()
         self.init_circle()
         self.init_theta_group()
@@ -59,13 +70,11 @@ class TrigRepresentationsScene(Scene):
             else:
                 color = self.x_line_colors
 
-        # Establish start point
         if func_name in ["sin", "cos", "tan", "cot"]:
             start_point = self.get_circle_point()
         else:
             start_point = ORIGIN
 
-        # Establish end point
         if func_name == "sin":
             end_point = start_point[0] * RIGHT
         elif func_name == "cos":
@@ -80,8 +89,6 @@ class TrigRepresentationsScene(Scene):
 class TrigAnimation(TrigRepresentationsScene):
     def construct(self):
         self.add_trig_lines("sin", "cos", "tan", "sec", "csc", "cot")
-
-        # Animate theta from 0 to 2pi
         self.animate_theta(0, 2 * np.pi)
 
     def animate_theta(self, start_theta, end_theta, run_time=5):
@@ -98,14 +105,13 @@ class TrigAnimation(TrigRepresentationsScene):
             new_group = VGroup(
                 *[self.get_trig_line(func) for func in ["sin", "cos", "tan", "sec", "csc", "cot"]]
             )
-
             group.become(new_group)
 
+
         trig_lines = VGroup(*[self.get_trig_line(func) for func in ["sin", "cos", "tan", "sec", "csc", "cot"]])
-        self.add(trig_lines)
+        self.add(trig_lines) #add this so it wont give error
         self.play(
             UpdateFromAlphaFunc(self.theta_group, update_theta_group),
             UpdateFromAlphaFunc(trig_lines, update_trig_lines),
-
             run_time=run_time,
         )
